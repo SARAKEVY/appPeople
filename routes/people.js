@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 router.use(express.json());
-const peopleM = require('../modele/people');
+const peopleM = require('../models/people');
 
 
 router.get('/', async (req, res) => {
@@ -17,36 +17,48 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const person = await peopleM.findById(req.params.id).exec();
-  res.json(person)
-  // res.send(user)
-  console.log(person)
-})
-
-
-router.post('/', (req, res) => {
-  // const newP = new peopleM({ "name": "hhhh", "age": 9 })
-  const newP = req.body
-  peopleM.insertMany(newP)
   try {
-    res.send(newP);
-    res.send('add new ');
+    res.json(person)
   } 
   catch (error) {
     res.status(500).send(error);
-    res.send('eroorrrrrrr');
+  }
+ })
+
+
+router.post('/', async(req, res) => {
+  const newP = req.body
+  const updateP = await peopleM.insertMany(newP)
+  try {
+    res.send(newP);
+  } 
+  catch (error) {
+    res.status(500).send(error);
   }
 })
 
 
 router.put('/:id', async (req, res) => {
-  personUpdate = req.body;
+  const personUpdate = req.body;
   const person = await peopleM.findByIdAndUpdate((req.params.id),personUpdate).exec();
+  
+  try {
+    res.send('personUpdate')
+  } 
+  catch (error) {
+    res.status(500).send(error);
+  }
 
 })
 
 router.delete('/:id', async (req, res) => {
   const person = await peopleM.findByIdAndDelete(req.params.id)
-  res.send('deletttttt')
+  try {
+    res.send('personDelete')
+  } 
+  catch (error) {
+    res.status(500).send(error);
+  }
 })
 
 
